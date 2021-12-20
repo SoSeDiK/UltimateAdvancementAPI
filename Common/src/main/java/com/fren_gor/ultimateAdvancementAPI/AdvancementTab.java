@@ -4,6 +4,7 @@ import com.fren_gor.eventManagerAPI.EventManager;
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.RootAdvancement;
+import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
 import com.fren_gor.ultimateAdvancementAPI.database.DatabaseManager;
 import com.fren_gor.ultimateAdvancementAPI.database.TeamProgression;
 import com.fren_gor.ultimateAdvancementAPI.events.advancement.AdvancementDisposeEvent;
@@ -64,6 +65,8 @@ public final class AdvancementTab {
     private final Map<Player, Set<MinecraftKeyWrapper>> players = new HashMap<>();
 
     private RootAdvancement rootAdvancement;
+    private float offsetX = 0;
+    private float offsetY = 0;
     private boolean initialised = false, disposed = false;
     @LazyValue
     private Collection<String> advNamespacedKeys;
@@ -100,6 +103,26 @@ public final class AdvancementTab {
     public RootAdvancement getRootAdvancement() {
         checkInitialisation();
         return rootAdvancement;
+    }
+
+    /**
+     * Returns advancements X-asis offset to workaround visual bugs
+     * with negative coordinates.
+     *
+     * @return X-asis offset.
+     */
+    public float getOffsetX() {
+        return offsetX;
+    }
+
+    /**
+     * Returns advancements Y-asis offset to workaround visual bugs
+     * with negative coordinates.
+     *
+     * @return Y-asis offset.
+     */
+    public float getOffsetY() {
+        return offsetY;
     }
 
     /**
@@ -495,7 +518,14 @@ public final class AdvancementTab {
                 onRegisterFail();
                 throw e;
             }
+
+            AdvancementDisplay advDisplay = adv.getDisplay();
+            offsetX = Math.min(advDisplay.getX(), offsetX);
+            offsetY = Math.min(advDisplay.getY(), offsetY);
         }
+
+        offsetX = -offsetX;
+        offsetY = -offsetY;
 
         // Initialise before validation since advancementTab's methods have to be called
         // Make sure to revert it in case of an invalid advancement is found. See onRegisterFail()

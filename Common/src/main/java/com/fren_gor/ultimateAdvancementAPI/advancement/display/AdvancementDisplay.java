@@ -1,5 +1,6 @@
 package com.fren_gor.ultimateAdvancementAPI.advancement.display;
 
+import com.fren_gor.ultimateAdvancementAPI.AdvancementTab;
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.RootAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.nms.wrappers.advancement.AdvancementDisplayWrapper;
@@ -88,9 +89,8 @@ public class AdvancementDisplay {
     /**
      * Creates a new {@code AdvancementDisplay}.
      * <p>The default color of the title and description is {@code frame.getColor()}.
-     * <p>The advancement is positioned by the x and y coordinates in the advancement GUI. The origin is placed in the
-     * upper-left corner of the advancement GUI. The x-axis points to the right (as usual), whereas the y-axis points downward.
-     * Thus, the x and y coordinates must be positive.
+     * <p>The advancement is positioned by the x and y coordinates in the advancement GUI.
+     * The x-axis points to the right (as usual), whereas the y-axis points downward.
      *
      * @param icon The material of the advancement's icon in the advancement GUI.
      * @param title The title of the advancement.
@@ -108,9 +108,8 @@ public class AdvancementDisplay {
     /**
      * Creates a new {@code AdvancementDisplay}.
      * <p>The default color of the title and description is {@code frame.getColor()}.
-     * <p>The advancement is positioned by the x and y coordinates in the advancement GUI. The origin is placed in the
-     * upper-left corner of the advancement GUI. The x-axis points to the right (as usual), whereas the y-axis points downward.
-     * Thus, the x and y coordinates must be positive.
+     * <p>The advancement is positioned by the x and y coordinates in the advancement GUI.
+     * The x-axis points to the right (as usual), whereas the y-axis points downward.
      *
      * @param icon The material of the advancement's icon in the advancement GUI.
      * @param title The title of the advancement.
@@ -128,9 +127,8 @@ public class AdvancementDisplay {
     /**
      * Creates a new {@code AdvancementDisplay}.
      * <p>The default color of the title and description is {@code frame.getColor()}.
-     * <p>The advancement is positioned by the x and y coordinates in the advancement GUI. The origin is placed in the
-     * upper-left corner of the advancement GUI. The x-axis points to the right (as usual), whereas the y-axis points downward.
-     * Thus, the x and y coordinates must be positive.
+     * <p>The advancement is positioned by the x and y coordinates in the advancement GUI.
+     * The x-axis points to the right (as usual), whereas the y-axis points downward.
      *
      * @param icon The advancement's icon in the advancement GUI.
      * @param title The title of the advancement.
@@ -148,9 +146,8 @@ public class AdvancementDisplay {
     /**
      * Creates a new {@code AdvancementDisplay}.
      * <p>The default color of the title and description is {@code frame.getColor()}.
-     * <p>The advancement is positioned by the x and y coordinates in the advancement GUI. The origin is placed in the
-     * upper-left corner of the advancement GUI. The x-axis points to the right (as usual), whereas the y-axis points downward.
-     * Thus, the x and y coordinates must be positive.
+     * <p>The advancement is positioned by the x and y coordinates in the advancement GUI.
+     * The x-axis points to the right (as usual), whereas the y-axis points downward.
      *
      * @param icon The advancement's icon in the advancement GUI.
      * @param title The title of the advancement.
@@ -167,9 +164,8 @@ public class AdvancementDisplay {
 
     /**
      * Creates a new {@code AdvancementDisplay}.
-     * <p>The advancement is positioned by the x and y coordinates in the advancement GUI. The origin is placed in the
-     * upper-left corner of the advancement GUI. The x-axis points to the right (as usual), whereas the y-axis points downward.
-     * Thus, the x and y coordinates must be positive.
+     * <p>The advancement is positioned by the x and y coordinates in the advancement GUI.
+     * The x-axis points to the right (as usual), whereas the y-axis points downward.
      *
      * @param icon The advancement's icon in the advancement GUI.
      * @param title The title of the advancement.
@@ -187,9 +183,8 @@ public class AdvancementDisplay {
 
     /**
      * Creates a new {@code AdvancementDisplay}.
-     * <p>The advancement is positioned by the x and y coordinates in the advancement GUI. The origin is placed in the
-     * upper-left corner of the advancement GUI. The x-axis points to the right (as usual), whereas the y-axis points downward.
-     * Thus, the x and y coordinates must be positive.
+     * <p>The advancement is positioned by the x and y coordinates in the advancement GUI.
+     * The x-axis points to the right (as usual), whereas the y-axis points downward.
      *
      * @param icon The advancement's icon in the advancement GUI.
      * @param title The title of the advancement.
@@ -209,8 +204,6 @@ public class AdvancementDisplay {
         Preconditions.checkNotNull(description, "Description is null.");
         for (String line : description)
             Preconditions.checkNotNull(line, "A line of the description is null.");
-        Preconditions.checkArgument(x >= 0, "x is not zero or positive.");
-        Preconditions.checkArgument(y >= 0, "y is not zero or positive.");
 
         this.icon = icon.clone();
         this.title = title;
@@ -307,12 +300,14 @@ public class AdvancementDisplay {
     @NotNull
     public AdvancementDisplayWrapper getNMSWrapper(@NotNull Advancement advancement) {
         Preconditions.checkNotNull(advancement, "Advancement is null.");
-        AdvancementDisplayWrapper wrapper;
         try {
+            AdvancementTab advancementTab = advancement.getAdvancementTab();
+            float offsetX = advancementTab.getOffsetX();
+            float offsetY = advancementTab.getOffsetY();
             if (advancement instanceof RootAdvancement root) {
-                return AdvancementDisplayWrapper.craft(icon, title, compactDescription, frame.getNMSWrapper(), x, y, root.getBackgroundTexture());
+                return AdvancementDisplayWrapper.craft(icon, title, compactDescription, frame.getNMSWrapper(), x + offsetX, y + offsetY, root.getBackgroundTexture());
             } else {
-                return AdvancementDisplayWrapper.craft(icon, title, compactDescription, frame.getNMSWrapper(), x, y);
+                return AdvancementDisplayWrapper.craft(icon, title, compactDescription, frame.getNMSWrapper(), x + offsetX, y + offsetY);
             }
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
